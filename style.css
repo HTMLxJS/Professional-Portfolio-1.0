@@ -1,0 +1,589 @@
+/* ======================= */
+/* GLOBAL STYLES       */
+/* ======================= */
+
+/* --- Import a cool font from Google Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* --- CSS Variables for easy theme customization --- */
+/* These are the "light mode" colors by default */
+:root {
+    --bg-color: #f4f7f6; /* Light gray background */
+    --text-color: #333333; /* Dark text */
+    --primary-color: #007bff; /* Professional blue */
+    --secondary-color: #6c757d; /* Gray for subtitles */
+    --card-bg: #ffffff; /* White background for cards */
+    --nav-bg: #ffffff; /* White navbar */
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --highlight-color: var(--primary-color);
+}
+
+/* --- Dark Mode variables --- */
+body.dark-mode {
+    --bg-color: #121212; /* Very dark background */
+    --text-color: #e0e0e0; /* Light text */
+    --primary-color: #00aaff; /* Brighter blue for dark mode */
+    --secondary-color: #a0a0a0;
+    --card-bg: #1e1e1e; /* Dark gray for cards */
+    --nav-bg: #1e1e1e;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --highlight-color: var(--primary-color);
+}
+
+/* --- Basic setup --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* This makes anchor links (#home, #about) scroll smoothly */
+    scroll-behavior: smooth;
+    /* This ensures footer doesn't jump on scroll */
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    /* Smooth transition for theme switching */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ======================= */
+/* UTILITY CLASSES     */
+/* ======================= */
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+}
+
+body.dark-mode .btn:hover {
+    background-color: #0088cc; /* Lighter blue on hover in dark mode */
+}
+
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.btn-link:hover {
+    color: var(--text-color);
+}
+
+.highlight {
+    color: var(--highlight-color);
+    font-weight: 700;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Creates a little underline for the section title */
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+.content-section {
+    padding: 100px 10%;
+    /* This is for the fade-in animation */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* This class will be added by JS when the section is in view */
+.content-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ======================= */
+/* HEADER & NAVBAR     */
+/* ======================= */
+.header {
+    position: fixed; /* Sticks the navbar to the top */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Stays on top of other content */
+    background-color: var(--nav-bg);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: background-color 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 70px;
+}
+
+.nav-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+/* Cool underline effect on hover */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- Theme Toggle Button --- */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.theme-toggle .fa-sun,
+.theme-toggle .fa-moon {
+    position: absolute;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.theme-toggle .fa-sun {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.theme-toggle .fa-moon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+body.dark-mode .theme-toggle .fa-sun {
+    opacity: 1;
+    transform: scale(1);
+}
+
+body.dark-mode .theme-toggle .fa-moon {
+    opacity: 0;
+    transform: scale(0);
+}
+
+
+/* --- Hamburger Menu (for mobile) --- */
+.hamburger {
+    display: none; /* Hidden on desktop */
+    cursor: pointer;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: var(--text-color);
+    transition: all 0.3s ease-in-out;
+}
+
+/* ======================= */
+/* HERO SECTION      */
+/* ======================= */
+.hero-section {
+    min-height: 100vh; /* Takes full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 10%;
+    padding-top: 70px; /* Account for navbar height */
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.hero-content h3 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+/* Style for the typing text */
+.typing-text {
+    color: var(--highlight-color);
+    font-weight: 600;
+    /* Blinking cursor effect */
+    border-right: 2px solid var(--highlight-color);
+    animation: blinkCursor 0.7s infinite;
+}
+
+@keyframes blinkCursor {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--highlight-color); }
+}
+
+.hero-bio {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    color: var(--secondary-color);
+}
+
+/* ======================= */
+/* ABOUT SECTION      */
+/* ======================= */
+.about-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.about-text {
+    flex: 2; /* Takes 2/3 of the space */
+}
+
+.about-text p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.skills-list {
+    flex: 1; /* Takes 1/3 of the space */
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+.skills-list h3 {
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+}
+
+.skills-list ul {
+    list-style: none;
+}
+
+.skills-list li {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.skills-list li i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    width: 20px; /* Aligns text */
+}
+
+/* ======================= */
+/* PROJECTS SECTION     */
+/* ======================= */
+.project-grid {
+    display: grid;
+    /* This is the responsive magic! */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden; /* Clips the image */
+    box-shadow: 0 4px 15px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px); /* Lifts the card on hover */
+    box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.project-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Ensures image covers the area */
+    display: block;
+}
+
+.project-card h3 {
+    font-size: 1.5rem;
+    padding: 20px 20px 10px 20px;
+}
+
+.project-card p {
+    font-size: 1rem;
+    padding: 0 20px 20px 20px;
+    color: var(--secondary-color);
+}
+
+.project-links {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 20px 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+/* ======================= */
+/* CONTACT SECTION      */
+/* ======================= */
+.contact-subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-bottom: 40px;
+}
+
+.contact-content {
+    display: flex;
+    gap: 40px;
+}
+
+.contact-form {
+    flex: 2; /* Form takes 2/3 of space */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+.contact-form textarea {
+    resize: vertical; /* Allow vertical resize only */
+}
+
+.contact-form .btn {
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+}
+
+.contact-info {
+    flex: 1; /* Info takes 1/3 of space */
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-info i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.social-links {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* ======================= */
+/* FOOTER          */
+/* ======================= */
+.footer {
+    text-align: center;
+    padding: 30px;
+    background-color: var(--card-bg); /* Use card-bg for contrast */
+    border-top: 1px solid var(--border-color);
+    margin-top: 50px;
+    color: var(--secondary-color);
+}
+
+/* ======================= */
+/* RESPONSIVE DESIGN    */
+/* ======================= */
+
+/* --- Tablet Devices --- */
+@media (max-width: 992px) {
+    .about-content,
+    .contact-content {
+        flex-direction: column;
+    }
+    
+    .skills-list {
+        width: 100%;
+    }
+}
+
+
+/* --- Mobile Devices --- */
+@media (max-width: 768px) {
+    .nav-menu {
+        /* This hides the menu off-screen */
+        position: fixed;
+        right: -100%; /* Start off-screen */
+        top: 70px; /* Below the navbar */
+        flex-direction: column;
+        background-color: var(--nav-bg);
+        width: 100%;
+        height: calc(100vh - 70px);
+        text-align: center;
+        transition: right 0.3s ease-in-out;
+        box-shadow: 0 10px 10px var(--shadow-color);
+    }
+    
+    /* This class is added by JS to show the menu */
+    .nav-menu.active {
+        right: 0;
+    }
+    
+    .nav-item {
+        margin: 20px 0;
+    }
+    
+    .nav-link {
+        font-size: 1.5rem;
+    }
+
+    .hamburger {
+        display: block; /* Show the burger icon */
+    }
+    
+    /* Burger animation when 'active' (X icon) */
+    .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
